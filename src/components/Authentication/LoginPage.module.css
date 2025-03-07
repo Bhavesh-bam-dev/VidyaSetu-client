@@ -1,0 +1,38 @@
+.login-form-container {
+	width: 30%;
+	margin: 0 auto;
+	border-radius: 6px;
+	border: 1px solid var(--form-border-color);
+	padding: 16px;
+}
+
+.login-title-text {
+	text-align: center;
+}
+
+.login-form {
+	width: 100%;
+}
+
+.login-button {
+	width: 100%;
+	margin-top: 8px;
+}
+
+.login-form-field {
+	margin-bottom: 8px;
+}
+
+.login-form-container input {
+	margin-top: 4px;
+}
+
+.register-text-container {
+	text-align: center;
+	margin-top: 4px;
+}
+
+.login-error-message-container {
+	text-align: center;
+	margin-top: 4px;
+}

@@ -1,0 +1,42 @@
+.register-form-container {
+	width: 30%;
+	border: 1px solid var(--form-border-color);
+	margin: 0 auto;
+	border-radius: 6px;
+	padding: 16px;
+}
+
+.register-title-text {
+	text-align: center;
+}
+
+.register-form {
+	width: 100%;
+}
+
+.register-form-container input {
+	margin-top: 4px;
+}
+
+.register-form-field {
+	margin-bottom: 8px;
+}
+
+.role-select {
+	width: 100%;
+	margin-top: 4px;
+	margin-bottom: 8px;
+	padding: 8px;
+	border-radius: 6px;
+	border: 1px solid var(--input-border-color);
+}
+
+.register-button {
+	width: 100%;
+	margin-top: 8px;
+}
+
+.login-text-container {
+	text-align: center;
+	margin-top: 4px;
+}
