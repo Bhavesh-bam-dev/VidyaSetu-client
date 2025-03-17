@@ -1,0 +1,21 @@
+.profile-container {
+	display: flex;
+	gap: 16px;
+	height: 18vh;
+	align-items: center;
+	border-bottom: 2px solid var(--form-border-color);
+}
+
+.profile-img-container {
+	margin-left: 16px;
+}
+
+.profile-img-container img {
+	width: 55px;
+	height: 55px;
+	border-radius: 50%;
+}
+
+.profile-email-text {
+	font-weight: bold;
+}
