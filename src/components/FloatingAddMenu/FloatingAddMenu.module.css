@@ -1,0 +1,55 @@
+.floating-add-menu-container {
+	position: fixed;
+	bottom: 24px;
+	right: 24px;
+	z-index: 1000;
+}
+
+.add-button {
+	color: var(--primary-color);
+	background-color: white;
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5);
+	font-size: 28px;
+	font-weight: normal;
+	width: 56px;
+	height: 56px;
+	padding: 8px;
+	border-radius: 50%;
+	float: right;
+}
+
+.add-button:hover {
+	background-color: var(--primary-color);
+	color: white;
+}
+
+.floating-add-menu {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	margin-bottom: 16px;
+	visibility: hidden;
+	opacity: 0;
+	transform: translateY(20px);
+	transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.menu-open {
+	opacity: 1;
+	transform: translateY(0);
+	visibility: visible;
+}
+
+.floating-add-menu-item {
+	font-weight: normal;
+}
+
+.floating-add-menu-overlay {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background-color: rgba(0, 0, 0, 0.5);
+	z-index: 999;
+}
