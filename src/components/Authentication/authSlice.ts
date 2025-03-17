@@ -1,10 +1,9 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../../App/store';
+import { RootState } from '../../app/store';
 import axios, { AxiosError } from 'axios';
 
 interface User {
 	id: number;
-	username: string;
 	email: string;
 	role: string;
 	token: string;
@@ -72,7 +71,7 @@ export const loginUser = createAsyncThunk<User, { email: string; password: strin
 				password: credential.password,
 			});
 			console.log('Login successfull:', response.data);
-			return response.data;
+			return response.data.user;
 		} catch (e) {
 			const error = e as AxiosError<{
 				error: string;
@@ -131,5 +130,6 @@ const authSlice = createSlice({
 export const authReducer = authSlice.reducer;
 export const { logout } = authSlice.actions;
 export const selectUser = (state: RootState) => state.auth.user;
+export const selectUserRole = (state: RootState) => state.auth.user?.role;
 export const selectAuthError = (state: RootState) => state.auth.error;
 export const selectAuthLoading = (state: RootState) => state.auth.loading;

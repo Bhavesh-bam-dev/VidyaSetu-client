@@ -1,9 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../App/hooks';
+import { useAppDispatch } from '../../app/hooks';
 import { loginUser, selectAuthError, selectAuthLoading } from './authSlice';
 import styles from './LoginPage.module.css';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import useEmailValidator from '../../app/hooks/useEmailValidator';
 
 interface LoginFormFields extends HTMLFormControlsCollection {
 	email: HTMLInputElement;
@@ -19,8 +20,10 @@ const LoginPage = () => {
 	const navigate = useNavigate();
 	const authError = useSelector(selectAuthError);
 	const authLoading = useSelector(selectAuthLoading);
-	const [isEmailValid, setIsEmailValid] = useState(true);
+	const [isEmailValid, emailValidator, email] = useEmailValidator(true);
 	const [isPasswordValid, setIsPasswordValid] = useState(true);
+	const [password, setPassword] = useState('');
+	const [isFormTouched, setIsFormTouched] = useState(false);
 
 	const loginHandler = async (event: React.FormEvent<LoginFormElements>) => {
 		event.preventDefault();
@@ -36,25 +39,21 @@ const LoginPage = () => {
 					password,
 				})
 			).unwrap();
-			navigate('/home');
+			navigate('/app');
 		} catch (error) {
 			console.log('Error in Login:', error);
 		}
 	};
 
-	const emailValidator = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-		const emailValue = e.target.value;
-
-		if (!emailRegex.test(emailValue)) {
-			setIsEmailValid(false);
-		} else {
-			setIsEmailValid(true);
-		}
+	const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setIsFormTouched(true);
+		emailValidator(e);
 	};
 
-	const passwordValidator = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const paaswordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setIsFormTouched(true);
 		const passwordValue = e.target.value;
+		setPassword(passwordValue);
 		const isPasswordEmpty = passwordValue.length === 0;
 		if (isPasswordEmpty) {
 			setIsPasswordValid(false);
@@ -88,9 +87,10 @@ const LoginPage = () => {
 						className={`styles['email-input'] ${!isEmailValid ? 'invalid-input' : ''}`}
 						id='email'
 						name='email'
+						value={email}
 						required
 						spellCheck='false'
-						onChange={emailValidator}
+						onChange={emailChangeHandler}
 					/>
 					<div>{emailValidationMessage}</div>
 				</div>
@@ -101,14 +101,15 @@ const LoginPage = () => {
 						id='password'
 						name='password'
 						type='password'
+						value={password}
 						required
-						onChange={passwordValidator}
+						onChange={paaswordChangeHandler}
 					/>
 					<div>{passwordValidationMessage}</div>
 				</div>
 				<button
 					className={styles['login-button']}
-					disabled={!isEmailValid || !isPasswordValid || authLoading}
+					disabled={!(isFormTouched && isEmailValid && isPasswordValid && email && password) || authLoading}
 				>
 					Login
 				</button>

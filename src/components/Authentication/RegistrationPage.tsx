@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../App/hooks';
+import { useAppDispatch } from '../../app/hooks';
 import { registerUser, selectAuthError, selectAuthLoading } from './authSlice';
 import styles from './RegistrationPage.module.css';
+import useEmailValidator from '../../app/hooks/useEmailValidator';
 
 interface RegisterFormFields extends HTMLFormControlsCollection {
 	email: HTMLInputElement;
@@ -25,46 +26,25 @@ const RegistrationPage = () => {
 	const [isContainsSpecialCharPassword, setIsContainsSpecialCharPassword] = useState(true);
 	const [isContainsNumPassword, setIsContainsNumPassword] = useState(true);
 	const [isContainsLetterPassword, setIsContainsLetterPassword] = useState(true);
-	const [isEmailValid, setIsEmailValid] = useState(true);
+	const [isEmailValid, emailValidator, email] = useEmailValidator(true);
+	const [isFormTouched, setIsFormTouched] = useState(false);
+	const [password, setPassword] = useState('');
 	const isPasswordValid = isMinLengthPassword && isContainsSpecialCharPassword && isContainsNumPassword && isContainsLetterPassword;
 
-	const registerUserHandler = async (event: React.FormEvent<RegisterFormElements>) => {
-		event.preventDefault();
-
-		const elements = event.currentTarget.elements;
-		const { email, role, password } = elements;
-
-		try {
-			await dispatch(
-				registerUser({
-					email: email.value,
-					role: role.value,
-					password: password.value,
-				})
-			).unwrap();
-			navigate('/login');
-		} catch (error) {
-			console.log('Error in Register', error);
-		}
+	const emailChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setIsFormTouched(true);
+		emailValidator(e);
 	};
 
-	const emailValidator = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-		const emailValue = e.target.value;
-
-		if (!emailRegex.test(emailValue)) {
-			setIsEmailValid(false);
-		} else {
-			setIsEmailValid(true);
-		}
-	};
-
-	const passwordValidator = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const passwordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const minLengthRegex = /.{8,}/; // At least 8 characters
 		const hasLetterRegex = /[A-Za-z]/; // At least one letter
 		const hasNumberRegex = /\d/; // At least one digit
 		const hasSpecialCharRegex = /[@$!%*?&]/; // At least one special character
 		const passwordValue = e.target.value;
+
+		setIsFormTouched(true);
+		setPassword(passwordValue);
 
 		if (!minLengthRegex.test(passwordValue)) {
 			setIsMinLengthPassword(false);
@@ -88,6 +68,26 @@ const RegistrationPage = () => {
 			setIsContainsSpecialCharPassword(false);
 		} else {
 			setIsContainsSpecialCharPassword(true);
+		}
+	};
+
+	const registerUserHandler = async (event: React.FormEvent<RegisterFormElements>) => {
+		event.preventDefault();
+
+		const elements = event.currentTarget.elements;
+		const { email, role, password } = elements;
+
+		try {
+			await dispatch(
+				registerUser({
+					email: email.value,
+					role: role.value,
+					password: password.value,
+				})
+			).unwrap();
+			navigate('/login');
+		} catch (error) {
+			console.log('Error in Register', error);
 		}
 	};
 
@@ -122,9 +122,10 @@ const RegistrationPage = () => {
 						id='email'
 						name='email'
 						type='email'
+						value={email}
 						required
 						spellCheck='false'
-						onChange={emailValidator}
+						onChange={emailChangeHandler}
 						className={!isEmailValid ? 'invalid-input' : ''}
 					/>
 					<div className={styles['email-validation-message-container']}>
@@ -151,15 +152,16 @@ const RegistrationPage = () => {
 						id='password'
 						name='password'
 						type='password'
+						value={password}
 						required
-						onChange={passwordValidator}
+						onChange={passwordChangeHandler}
 						className={!isPasswordValid ? 'invalid-input' : ''}
 					/>
 					{passwordValidationMessage}
 				</div>
 				<button
 					className={styles['register-button']}
-					disabled={!isEmailValid || !isPasswordValid || authLoading}
+					disabled={!(isFormTouched && isEmailValid && isPasswordValid && email && password) || authLoading}
 				>
 					Register
 				</button>
