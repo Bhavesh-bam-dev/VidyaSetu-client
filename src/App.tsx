@@ -8,6 +8,7 @@ import DashboardLayout from './components/DashboardLayout/DashboardLayout';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import ClassesPage from './components/ClassesPage/ClassesPage';
 import AddClassPage from './components/AddClass/AddClassPage';
+import ClassPage from './components/ClassesPage/ClassPage';
 
 function App() {
 	return (
@@ -30,12 +31,25 @@ function App() {
 							element={<DashboardLayout />}
 						>
 							<Route
+								index
+								element={
+									<Navigate
+										to='classes'
+										replace
+									/>
+								}
+							/>
+							<Route
 								path='classes'
 								element={<ClassesPage />}
 							/>
 							<Route
 								path='classes/new'
 								element={<AddClassPage />}
+							/>
+							<Route
+								path='classes/:classId'
+								element={<ClassPage />}
 							/>
 							<Route
 								path='tasks'
