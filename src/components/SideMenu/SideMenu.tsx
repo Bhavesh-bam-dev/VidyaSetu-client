@@ -1,7 +1,21 @@
+import { useNavigate } from 'react-router-dom';
 import styles from './SideMenu.module.css';
+import { useAppDispatch } from '../../app/hooks';
+import { logout } from '../Authentication/authSlice';
 
 const SideMenu = () => {
-	const menuItems = ['Classes', 'Tasks', 'Notifications', 'Settings'];
+	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
+	const menuItems = ['Classes', 'Tasks', 'Notifications', 'Settings', 'Logout'];
+	const navigationPaths = ['/app/classes', '', '', '', ''];
+
+	const menuItemClickHandler = (index: number) => {
+		if (index === 4) {
+			dispatch(logout());
+		} else {
+			navigate(navigationPaths[index]);
+		}
+	};
 
 	return (
 		<div className={styles['side-menu-container']}>
@@ -11,8 +25,9 @@ const SideMenu = () => {
 						<li
 							className={styles['side-menu-item']}
 							key={index}
+							onClick={() => menuItemClickHandler(index)}
 						>
-							{item}
+							<a>{item}</a>
 						</li>
 					);
 				})}
