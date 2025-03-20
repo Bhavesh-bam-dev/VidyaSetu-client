@@ -1,0 +1,13 @@
+.classpage-container {
+	padding: 32px;
+}
+
+.classpage-title {
+	padding-bottom: 8px;
+	margin-bottom: 8px;
+	border-bottom: 1px solid var(--form-border-color);
+	color: var(--primary-color);
+}
+
+.classpage-description {
+}
