@@ -1,12 +1,20 @@
 import { useState } from 'react';
 import styles from './FloatingAddMenu.module.css';
+import { useNavigate } from 'react-router-dom';
 
 const FloatingAddMenu = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
+	const navigate = useNavigate();
 	const actionNames = ['Add Class', 'Add Lesson', 'Add Assignment', 'Add Task'];
+	const navigationPaths = ['/app/classes/new'];
 
 	const toggleMenu = () => {
 		setIsMenuOpen((prevState) => !prevState);
+	};
+
+	const menuOptionClickHandler = (index: number) => {
+		navigate(navigationPaths[index]);
+		setIsMenuOpen(false);
 	};
 
 	let floatingMenu = (
@@ -16,6 +24,7 @@ const FloatingAddMenu = () => {
 					<button
 						key={index}
 						className={styles['floating-add-menu-item']}
+						onClick={() => menuOptionClickHandler(index)}
 					>
 						{actionName}
 					</button>
@@ -38,8 +47,7 @@ const FloatingAddMenu = () => {
 					className={styles['add-button']}
 					onClick={toggleMenu}
 				>
-					{' '}
-					+{' '}
+					+
 				</button>
 			</div>
 		</>
